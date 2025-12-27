@@ -8,7 +8,6 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
-  // হাইড্রেশন এরর এড়ানোর জন্য
   React.useEffect(() => {
     setMounted(true);
   }, []);

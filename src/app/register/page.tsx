@@ -11,7 +11,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // ফর্ম ডাটা স্টেট
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,19 +19,16 @@ export default function RegisterPage() {
     password: "",
   });
 
-  // ইনপুট হ্যান্ডেল করা
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // সাবমিট হ্যান্ডেল করা
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const { name, email, phone, nid, password } = formData;
 
-    // ১. পাসওয়ার্ড ভ্যালিডেশন (রিকুয়ারমেন্ট অনুযায়ী)
     const passwordRegex = /(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!passwordRegex.test(password)) {
       toast.error(
@@ -43,19 +39,16 @@ export default function RegisterPage() {
     }
 
     try {
-      // ২. Firebase এ ইউজার তৈরি করা
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      // ৩. Firebase এ নাম আপডেট করা
       await updateProfile(userCredential.user, {
         displayName: name,
       });
 
-      // ৪. MongoDB তে অতিরিক্ত তথ্য (NID, Phone) সেভ করা
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -68,11 +61,9 @@ export default function RegisterPage() {
 
       toast.success("Registration Successful!");
 
-      // ৫. সফল হলে হোম পেজে পাঠিয়ে দেওয়া
       router.push("/");
     } catch (error: any) {
       console.error(error);
-      // Firebase এর সাধারণ এরর মেসেজ হ্যান্ডলিং
       if (error.code === "auth/email-already-in-use") {
         toast.error("Email is already registered.");
       } else {

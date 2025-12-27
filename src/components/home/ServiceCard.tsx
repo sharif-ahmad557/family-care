@@ -18,7 +18,6 @@ export default function ServiceCard({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full border border-gray-100 dark:border-gray-700">
       <div className="relative h-48 w-full">
-        {/* Next.js Image ব্যবহার করছি না কারণ external domain config করা লাগতে পারে, তাই সাধারণ img ট্যাগ ব্যবহার করছি সহজ রাখার জন্য */}
         <img
           src={image}
           alt={title}

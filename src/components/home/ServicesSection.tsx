@@ -15,7 +15,6 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        {/* ⚠️ FORCED LAYOUT: সব সময় ৩টি কলাম থাকবে */}
         <div className="grid grid-cols-3 gap-4 md:gap-8">
           {services.map((service) => (
             <ServiceCard

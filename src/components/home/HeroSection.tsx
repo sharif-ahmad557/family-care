@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 export default function HeroSection() {
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background Image using standard img tag */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?q=80&w=2070&auto=format&fit=crop"

@@ -6,10 +6,8 @@ export async function POST(req: Request) {
   try {
     const { name, email, phone, nid } = await req.json();
 
-    // ১. ডাটাবেস কানেক্ট করা
     await connectDB();
 
-    // ২. চেক করা ইউজার আগে থেকেই আছে কিনা
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -18,7 +16,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // ৩. নতুন ইউজার তৈরি করা
     await User.create({ name, email, phone, nid });
 
     return NextResponse.json(

@@ -2,11 +2,30 @@ import { services } from "@/constants/services";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle, Clock, MapPin } from "lucide-react";
+import { Metadata } from "next";
 
 interface ServiceDetailsProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ServiceDetailsProps): Promise<Metadata> {
+  const { id } = await params;
+  const service = services.find((s) => s.id === id);
+
+  if (!service) {
+    return {
+      title: "Service Not Found | Family Care",
+    };
+  }
+
+  return {
+    title: `${service.title} Service | Family Care`,
+    description: service.description,
+  };
 }
 
 export default async function ServiceDetailsPage({
@@ -30,9 +49,9 @@ export default async function ServiceDetailsPage({
         </Link>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800">
-          {/* ⚠️ FORCED ROW: flex-col বাদ দেওয়া হয়েছে */}
+          {/* Forced Row Layout */}
           <div className="flex flex-row">
-            {/* Left Side: Image (Always 50%) */}
+            {/* Image Section */}
             <div className="w-1/2 relative min-h-[400px]">
               <img
                 src={service.image}
@@ -41,7 +60,7 @@ export default async function ServiceDetailsPage({
               />
             </div>
 
-            {/* Right Side: Details (Always 50%) */}
+            {/* Content Section */}
             <div className="w-1/2 p-6 md:p-12 flex flex-col justify-center">
               <div className="uppercase tracking-wide text-sm text-primary font-bold mb-2">
                 Professional Service
