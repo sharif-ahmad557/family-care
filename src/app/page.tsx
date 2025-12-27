@@ -1,10 +1,15 @@
+import HeroSection from "@/components/home/HeroSection";
+import ServicesSection from "@/components/home/ServicesSection";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold text-primary">
-        Welcome to Family Care
-      </h1>
-      <p className="mt-4 text-xl">Project Setup Completed Successfully!</p>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <HeroSection />
+      <ServicesSection />
+      {/* পরের সেকশনগুলো আমরা নিচে নিচে যোগ করব */}
+      <div className="py-10 text-center text-gray-500">
+        (Services Section Coming Soon...)
+      </div>
     </main>
   );
 }
