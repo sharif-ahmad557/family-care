@@ -1,18 +1,23 @@
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import HeroSection from "@/components/homepage/HeroSection";
+import AboutSection from "@/components/homepage/AboutSection";
+import ServicesSection from "@/components/homepage/ServicesSection";
+import HowItWorks from "@/components/homepage/HowItWorks";
+import TestimonialSection from "@/components/homepage/TestimonialSection";
+import FAQSection from "@/components/homepage/FAQSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <Navbar />
-
-      {/* Requirement: Homepage Sections Placeholder */}
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-4xl font-bold mb-4">Care.IO / Family Care</h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
-          Banner, About Section, Services Overview, and Testimonials will be
-          implemented here.
-        </p>
-      </div>
+      <HeroSection />
+      <AboutSection />
+      <ServicesSection />
+      <HowItWorks />
+      <TestimonialSection />
+      <FAQSection />
+      <Footer />
     </main>
   );
 }
