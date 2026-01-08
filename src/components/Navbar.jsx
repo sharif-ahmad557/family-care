@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { theme, setTheme, systemTheme } = useTheme();
-  const { user, logOut } = useAuth(); // AuthContext থেকে ইউজার এবং লগআউট ফাংশন
+  const { user, logOut } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -17,61 +17,57 @@ const Navbar = () => {
     setMounted(true);
   }, []);
 
-  // লগআউট হ্যান্ডলার
   const handleLogout = async () => {
-    try {
-      await logOut();
-      toast.success("Logged out successfully");
-    } catch (error) {
-      console.error(error);
-      toast.error("Logout failed");
-    }
+    await logOut();
+    toast.success("Logged out");
   };
 
   if (!mounted) return null;
   const currentTheme = theme === "system" ? systemTheme : theme;
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
 
   return (
     <nav className="border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-2xl font-bold text-primary">
-              Family<span className="text-gray-800 dark:text-white">Care</span>
-            </Link>
-          </div>
+          <Link href="/" className="text-2xl font-bold text-primary">
+            <img src="/Logo.png" alt="logo" className="w-32 h-32" />
+            
+          </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="hover:text-primary transition-colors font-medium"
-            >
-              Home
-            </Link>
-            <Link
-              href="/services"
-              className="hover:text-primary transition-colors font-medium"
-            >
-              Services
-            </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.path}
+                className="hover:text-primary font-medium transition-colors dark:text-gray-200"
+              >
+                {link.name}
+              </Link>
+            ))}
 
-            {/* যদি ইউজার লগইন থাকে */}
             {user ? (
               <>
                 <Link
                   href="/my-bookings"
-                  className="hover:text-primary transition-colors font-medium"
+                  className="hover:text-primary font-medium dark:text-gray-200"
                 >
                   My Bookings
                 </Link>
-                <div className="flex items-center gap-3 ml-4">
+                <div className="flex items-center gap-3 ml-2 border-l pl-4 dark:border-gray-600">
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
                       alt="User"
-                      className="w-8 h-8 rounded-full border border-gray-300"
+                      className="w-8 h-8 rounded-full border"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
@@ -80,14 +76,13 @@ const Navbar = () => {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 text-red-500 hover:text-red-600 font-medium"
+                    className="text-red-500 hover:text-red-600"
                   >
-                    <FiLogOut /> Logout
+                    <FiLogOut size={20} />
                   </button>
                 </div>
               </>
             ) : (
-              /* যদি ইউজার লগইন না থাকে */
               <Link
                 href="/login"
                 className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-sky-600 transition-colors"
@@ -96,7 +91,6 @@ const Navbar = () => {
               </Link>
             )}
 
-            {/* Theme Toggle */}
             <button
               onClick={() =>
                 setTheme(currentTheme === "dark" ? "light" : "dark")
@@ -117,7 +111,6 @@ const Navbar = () => {
               onClick={() =>
                 setTheme(currentTheme === "dark" ? "light" : "dark")
               }
-              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
             >
               {currentTheme === "dark" ? (
                 <FiSun className="text-yellow-500" />
@@ -125,40 +118,43 @@ const Navbar = () => {
                 <FiMoon />
               )}
             </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-gray-700 dark:text-gray-200"
-            >
-              <FiMenu className="h-6 w-6" />
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <FiMenu className="h-6 w-6 dark:text-white" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown (Simple implementation) */}
+      {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-4">
-          <div className="flex flex-col space-y-4">
-            <Link href="/" className="hover:text-primary">
-              Home
-            </Link>
-            <Link href="/services" className="hover:text-primary">
-              Services
-            </Link>
+        <div className="md:hidden bg-white dark:bg-gray-900 p-4 border-t dark:border-gray-700">
+          <div className="flex flex-col space-y-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.path}
+                className="block py-2 dark:text-white"
+              >
+                {link.name}
+              </Link>
+            ))}
             {user ? (
               <>
-                <Link href="/my-bookings" className="hover:text-primary">
+                <Link
+                  href="/my-bookings"
+                  className="block py-2 dark:text-white"
+                >
                   My Bookings
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-left text-red-500"
+                  className="text-left text-red-500 py-2"
                 >
                   Logout
                 </button>
               </>
             ) : (
-              <Link href="/login" className="text-primary font-bold">
+              <Link href="/login" className="block py-2 text-primary font-bold">
                 Login
               </Link>
             )}
