@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 
 const testimonials = [
+  // ... (আপনার আগের টেস্টিমোনিয়াল ডাটাগুলো ঠিক রাখুন)
   {
     id: 1,
     name: "Sarah Rahman",
@@ -77,9 +78,26 @@ const TestimonialSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
+
+  // FIX: ডিফল্ট ৩ সেট করলাম, সার্ভারে window নেই তাই ৩ ধরেই রেন্ডার হবে
+  const [visibleCards, setVisibleCards] = useState(3);
   const timeoutRef = useRef(null);
 
   const totalSlides = testimonials.length;
+
+  // FIX: উইন্ডো সাইজ চেক করার লজিক useEffect এ আনলাম (এটি শুধু ক্লায়েন্টে রান হবে)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setVisibleCards(1);
+      else if (window.innerWidth < 1024) setVisibleCards(2);
+      else setVisibleCards(3);
+    };
+
+    // মাউন্ট হওয়ার পর এবং রিসাইজ হলে রান করবে
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (isPaused) return;
@@ -87,7 +105,7 @@ const TestimonialSection = () => {
     const startAutoSlide = () => {
       timeoutRef.current = setTimeout(() => {
         handleNext();
-      }, 2000);
+      }, 3000);
     };
 
     startAutoSlide();
@@ -132,7 +150,6 @@ const TestimonialSection = () => {
           </p>
         </div>
 
-        {/* Carousel Wrapper */}
         <div
           className="relative group"
           onMouseEnter={() => setIsPaused(true)}
@@ -158,14 +175,9 @@ const TestimonialSection = () => {
             <div
               className="flex"
               style={{
+                // FIX: এখানে এখন visibleCards স্টেট ব্যবহার করছি, সরাসরি window নয়
                 transform: `translateX(-${
-                  currentIndex *
-                  (100 /
-                    (typeof window !== "undefined" && window.innerWidth < 768
-                      ? 1
-                      : window.innerWidth < 1024
-                      ? 2
-                      : 3))
+                  currentIndex * (100 / visibleCards)
                 }%)`,
                 transition: isTransitioning
                   ? "transform 0.5s ease-in-out"
@@ -176,11 +188,12 @@ const TestimonialSection = () => {
               {extendedTestimonials.map((item, index) => (
                 <div
                   key={index}
-                  className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4"
+                  // FIX: এখানেও visibleCards ব্যবহার করছি
+                  style={{ width: `${100 / visibleCards}%` }}
+                  className="flex-shrink-0 px-4"
                 >
                   <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col relative group/card">
                     <FaQuoteLeft className="absolute top-6 right-6 text-4xl text-gray-100 dark:text-gray-700 group-hover/card:text-primary/10 transition-colors" />
-
                     <div className="flex items-center gap-4 mb-6">
                       <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary p-0.5">
                         <img
@@ -198,7 +211,6 @@ const TestimonialSection = () => {
                         </p>
                       </div>
                     </div>
-
                     <div className="flex gap-1 mb-4 text-yellow-400 text-sm">
                       {[...Array(5)].map((_, i) => (
                         <FaStar
@@ -209,7 +221,6 @@ const TestimonialSection = () => {
                         />
                       ))}
                     </div>
-
                     <p className="text-gray-600 dark:text-gray-300 italic leading-relaxed flex-grow">
                       "{item.quote}"
                     </p>
